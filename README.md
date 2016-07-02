@@ -6,8 +6,8 @@
 much the way the GNU/Linux `ls` command lists in a multi-column
 format (except for long format listings).
 
-Infact, the heat of the logic for determining how many columns
-will fit is taken right out of the GNU coreutils ls command.
+In fact, the heart of the logic for determining how many columns
+will fit is taken right out of the GNU coreutils `ls` command.
 
 But, `mcml` knows nothing of file names.
 Input is one element per line.
@@ -23,9 +23,9 @@ The --cmd option specifies a command prefix.
 The only command is, "category",
 which introduces a new category.
 For every new category, `mcml` prints what elements
-have been accumulated so far (for the previous catagory),
-then print the new category header,
-then starts accumulating elements for the next catagory.
+have been accumulated so far (for the previous category),
+then prints the new category header,
+then starts accumulating elements for the next category.
 
 Once a category has been printed,
 it does not influence the way columns are laid out
@@ -52,22 +52,33 @@ Arrange elements horizontally, across each row.
 
 So, { alice bob charly david } is laid out like
 
+```
 { alice   bob   }
 
 { charly  david }
+```
 
 The default is to print colmns,
 like newspaper columns.
 So, { alice bob charly david } is laid out like
 
-
+```
 { alice  charly }
 { bob    david  }
+```
 
 
 --width=_n_
 
 Use _n_ as the dsplay width.
+
+The default is 80 characters.
+`mcml` knows nothing of fonts,
+and certainly does not provide for variable width fonts.
+
+`mcml` does not try to determine display width
+using any knowledge of terminals or any environment variables
+such as `COLUMNS`.  The caller will have to take care of that.
 
 
 --indent=_n_
