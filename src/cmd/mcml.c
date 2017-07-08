@@ -107,7 +107,7 @@ static const char usage_text[] =
     "  --indnt|i <n>        Indentation (number of spaces)\n"
     "\n"
     "The only command is \"category\".  A new category\n"
-    "casue mcml to break, print all data collected so far,\n"
+    "causes mcml to break, print all data collected so far,\n"
     "print the category header, then start fresh with the\n"
     "new category data.\n"
     "If no command prefix is specified, then all lines are\n"
