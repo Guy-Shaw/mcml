@@ -69,8 +69,9 @@ const char *program_name;
 size_t filec;               // Count of elements in filev
 char **filev;               // Non-option elements of argv
 
-bool verbose = false;
-bool debug   = false;
+bool verbose  = false;
+bool debug    = false;
+bool opt_argv = false;
 
 static char *cmdpfx;
 static size_t width      = 0;
@@ -86,6 +87,7 @@ static struct option long_options[] = {
     {"version",        no_argument,       0,  'V'},
     {"verbose",        no_argument,       0,  'v'},
     {"debug",          no_argument,       0,  'd'},
+    {"argv",           no_argument,       0,  'A'},
     {"each-file",      no_argument,       0,  'E'},
     {"horizontal",     no_argument,       0,  'H'},
     {"cmd",            required_argument, 0,  'c'},
@@ -100,11 +102,12 @@ static const char usage_text[] =
     "  --version            Show version information and exit\n"
     "  --verbose|-v         verbose\n"
     "  --debug|-d           debug\n"
+    "  --argv               Input is argv, instead of from files\n"
     "  --each-file|-E       Break and print after each file\n"
     "  --horizontal|-H      Print elements along rows first\n"
     "  --cmd|c <str>        Command prefix\n"
     "  --width|w <n>        display width (AKA line length)\n"
-    "  --indnt|i <n>        Indentation (number of spaces)\n"
+    "  --indent|i <n>       Indentation (number of spaces)\n"
     "\n"
     "The only command is \"category\".  A new category\n"
     "causes mcml to break, print all data collected so far,\n"
@@ -414,6 +417,33 @@ filev_mcml(void)
 }
 
 int
+argv_mcml(size_t argc, char **argv)
+{
+    size_t i;
+
+    for (i = 0; i < argc; ++i) {
+        if (cmdpfx != NULL && is_prefix(cmdpfx, argv[i])) {
+            char *cmd;
+            char *arg;
+            parse_mcml_command(argv[i], &cmd, &arg);
+
+            // fprintf(stderr, "cmd=[%s]\n", cmd);
+            // fprintf(stderr, "arg=[%s]\n", arg);
+
+            if (strcmp(cmd, "category") == 0) {
+                mc_flush();
+                fprintf(stdout, "%s:\n", arg);
+                continue;
+            }
+        }
+        mc_add_element(argv[i]);
+    }
+
+    mc_flush();
+    return (0);
+}
+
+int
 main(int argc, char **argv)
 {
     extern char *optarg;
@@ -464,6 +494,9 @@ main(int argc, char **argv)
             break;
         case 'v':
             verbose = true;
+            break;
+        case 'A':
+            opt_argv = true;
             break;
         case 'H':
             horizontal = true;
@@ -531,7 +564,10 @@ main(int argc, char **argv)
         width = 80;
     }
 
-    if (filec == 0) {
+    if (opt_argv) {
+        rv = argv_mcml(filec, filev);
+    }
+    else if (filec == 0) {
         each_file = true;
         rv = mcml_stream("-", stdin);
     }
