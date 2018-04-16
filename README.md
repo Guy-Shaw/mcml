@@ -41,6 +41,13 @@ Pretty-print values of interest only for debugging.
 
 Show some feedback while running.
 
+--argv
+
+The items to be listed are the arguments on the command line,
+instead of the contents of files.
+No files are read.
+No arguments are interpreted as filenames.
+
 --cmd=_str_
 
 Use _str_ as the command prefix.
