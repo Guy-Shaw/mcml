@@ -2,7 +2,7 @@
 # Project: mcml
 # Brief: Multi-Column Markup Language // Test of libmc
 #
-# Copyright (C) 2016 Guy Shaw
+# Copyright (C) 2016-2019 Guy Shaw
 # Written by Guy Shaw <gshaw@acm.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -33,9 +33,11 @@ CPPFLAGS := -I../inc
 
 all: $(PROGRAM)
 
+test: $(PROGRAM)
+	./$(PROGRAM)
+
 $(PROGRAM): $(OBJS)
 	$(CC) -o $@ $(CFLAGS) $(CONFIG) $(OBJS) $(LIBS)
-
 
 clean:
 	rm -f $(PROGRAM) core a.out *.o *.a
